@@ -5,4 +5,4 @@ For convenience of learning and experimentation, this project wishes to include 
 Included components:
 
 * Zookeeper
-
+* Hadoop
