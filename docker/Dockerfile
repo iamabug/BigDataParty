@@ -2,8 +2,9 @@ FROM ubuntu:18.04
 
 RUN sed -i 's/security.ubuntu.com/mirrors.ustc.edu.cn/g' /etc/apt/sources.list
 RUN sed -i 's/archive.ubuntu.com/mirrors.ustc.edu.cn/g' /etc/apt/sources.list
-RUN apt-get update && apt-get install -y --no-install-recommends openjdk-8-jdk net-tools vim wget telnet iputils-ping openssh-server openssh-client
+RUN apt-get update && apt-get install -y --no-install-recommends openjdk-8-jdk net-tools vim wget telnet iputils-ping openssh-server openssh-client python3 python3-dev python3-pip mysql-server-5.7
 ENV JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
+
 
 
 
@@ -38,8 +39,15 @@ ENV HADOOP_HDFS_HOME=${HADOOP_HOME}
 ENV YARN_HOME=${HADOOP_HOME}
 ENV HADOOP_COMMON_LIB_NATIVE_DIR=${HADOOP_HOME}/lib/native
 ENV HADOOP_OPTS="-Djava.library.path=${HADOOP_HOME}/lib"
-ENV PATH=${HADOOP_HOME}/bin:${HADOOP_HOME}/sbin:$PATH
+#ENV PATH=${HADOOP_HOME}/bin:${HADOOP_HOME}/sbin:$PATH
 ADD conf/hadoop /etc/hadoop
+
+# Spark
+ADD spark.tgz /usr/local
+RUN mv /usr/local/spark* /usr/local/spark && \
+ln -s /usr/local/spark/conf /etc/spark
+ADD conf/spark /etc/spark
+#ENV PATH=/usr/local/spark/bin:$PATH
 
 # Kafka
 ADD kafka.tgz /usr/local
@@ -47,8 +55,11 @@ RUN mv /usr/local/kafka* /usr/local/kafka && \
 ln -s /usr/local/kafka/config /etc/kafka
 RUN mkdir /usr/local/kafka/data /usr/local/kafka/log
 ADD conf/kafka/server.properties /etc/kafka
-ENV PATH=/usr/local/kafka/bin:$PATH
+#ENV PATH=/usr/local/kafka/bin:$PATH
 
+# MySQL
+#RUN service mysql start && \
+#    mysql -e "grant all privileges on *.* to 'root'@'localhost' identified by '123456' WITH GRANT OPTION ;"
 RUN echo "PATH=/usr/local/kafka/bin:/usr/local/hadoop/bin/:/usr/local/hadoop/sbin:$PATH" >> /etc/environment
 # all
 ADD entrypoint.sh /var

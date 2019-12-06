@@ -7,4 +7,13 @@
         <name>yarn.resourcemanager.hostname</name>
         <value>bigdata</value>
     </property>
+    <!--following two properties are to solve the error of running spark-example -->
+    <property>
+        <name>yarn.nodemanager.vmem-check-enabled</name>
+        <value>false</value>
+    </property>
+    <property>
+        <name>yarn.nodemanager.pmem-check-enabled</name>
+        <value>false</value>
+    </property>
 </configuration>
