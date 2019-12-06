@@ -6,3 +6,4 @@ Included components:
 
 * Zookeeper
 * Hadoop
+* Kafka
