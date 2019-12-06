@@ -38,9 +38,19 @@ ENV HADOOP_HDFS_HOME=${HADOOP_HOME}
 ENV YARN_HOME=${HADOOP_HOME}
 ENV HADOOP_COMMON_LIB_NATIVE_DIR=${HADOOP_HOME}/lib/native
 ENV HADOOP_OPTS="-Djava.library.path=${HADOOP_HOME}/lib"
-RUN echo "PATH=/usr/local/hadoop/bin:/usr/local/hadoop/sbin:$PATH" >> /etc/environment
-ADD conf /etc/hadoop
+ENV PATH=${HADOOP_HOME}/bin:${HADOOP_HOME}/sbin:$PATH
+ADD conf/hadoop /etc/hadoop
 
-ADD entrypoint.sh /tmp/
+# Kafka
+ADD kafka.tgz /usr/local
+RUN mv /usr/local/kafka* /usr/local/kafka && \
+ln -s /usr/local/kafka/config /etc/kafka
+RUN mkdir /usr/local/kafka/data /usr/local/kafka/log
+ADD conf/kafka/server.properties /etc/kafka
+ENV PATH=/usr/local/kafka/bin:$PATH
+
+RUN echo "PATH=/usr/local/kafka/bin:/usr/local/hadoop/bin/:/usr/local/hadoop/sbin:$PATH" >> /etc/environment
+# all
+ADD entrypoint.sh /var
 
 #ENTRYPOINT ["bash", "-c", "/tmp/start_all.sh"]

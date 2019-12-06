@@ -1,16 +1,20 @@
 hadoop_v=3.1.3
 spark_v=2.4.4
 zookeeper_v=3.5.6
+kafka_v=2.3.1
+scala_v=2.12
 
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-BLUE='\033[0;34m'
-NC='\033[0m' # No Color
+# font color
+RED="\033[0;31m"
+GREEN="\033[0;32m"
+BLUE="\033[0;34m"
+NC="\033[0m" # No Color
 
 mirror_prefix=http://mirrors.tuna.tsinghua.edu.cn
 hadoop_url=${mirror_prefix}/apache/hadoop/common/hadoop-"${hadoop_v}"/hadoop-"${hadoop_v}".tar.gz
 spark_url=${mirror_prefix}/apache/spark/spark-"${spark_v}"/spark-${spark_v}-bin-hadoop2.7.tgz
 zookeeper_url=${mirror_prefix}/apache/zookeeper/zookeeper-"${zookeeper_v}"/apache-zookeeper-"${zookeeper_v}"-bin.tar.gz
+kafka_url=${mirror_prefix}/apache/kafka/2.3.1/kafka_"${scala_v}"-"${kafka_v}".tgz
 
 colorful_echo() {
     echo "${1}${2}${NC}"
@@ -26,5 +30,6 @@ download() {
 }
 
 download "${hadoop_url}" hadoop.tar.gz
-download "${spark_url}" spark.tgz
+#download "${spark_url}" spark.tgz
 download "${zookeeper_url}" zookeeper.tar.gz
+download "${kafka_url}" kafka.tgz
