@@ -4,7 +4,8 @@
 service ssh start
 
 # mysql
-#service mysql start
+chown -R mysql:mysql /var/lib/mysql
+service mysql start
 
 # zookeeper
 /usr/local/zookeeper/bin/zkServer.sh start
