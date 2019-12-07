@@ -9,21 +9,22 @@ echo mysql-server-5.7 mysql-server/root_password password root | debconf-set-sel
 echo mysql-server-5.7 mysql-server/root_password_again password root | debconf-set-selections && \
 apt-get install -y mysql-server-5.7 -o pkg::Options::="--force-confdef" -o pkg::Options::="--force-confold" --fix-missing
 
-RUN apt-get install -y --no-install-recommends openjdk-8-jdk net-tools vim wget telnet iputils-ping openssh-server openssh-client python3 python3-dev python3-pip
+RUN apt-get install -y --no-install-recommends openjdk-8-jdk net-tools vim wget telnet iputils-ping \
+openssh-server openssh-client python3 python3-dev python3-pip libmysql-java
 ENV JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
 
 
-
+# add all packages
+ADD packages/* /usr/local/
+RUN ls /usr/local
 
 # zookeeper
-ADD packages/zookeeper.tar.gz /usr/local
 RUN mv /usr/local/apache-zookeeper* /usr/local/zookeeper
 RUN mkdir /var/lib/zookeeper
 RUN sed "s#/tmp/zookeeper#/var/lib/zookeeper#" /usr/local/zookeeper/conf/zoo_sample.cfg > /usr/local/zookeeper/conf/zoo.cfg
 
 
 # hadoop
-ADD packages/hadoop.tar.gz /usr/local
 RUN mv /usr/local/hadoop* /usr/local/hadoop
 RUN ln -s /usr/local/hadoop/etc/hadoop /etc/hadoop
 RUN mkdir -p /usr/local/hadoop/data/{namenode,datanode}
@@ -50,31 +51,36 @@ ENV HADOOP_OPTS="-Djava.library.path=${HADOOP_HOME}/lib"
 ADD conf/hadoop /etc/hadoop
 
 # Spark
-ADD packages/spark.tgz /usr/local
 RUN mv /usr/local/spark* /usr/local/spark && \
 ln -s /usr/local/spark/conf /etc/spark
 ADD conf/spark /etc/spark
 #ENV PATH=/usr/local/spark/bin:$PATH
 
 # Kafka
-ADD packages/kafka.tgz /usr/local
 RUN mv /usr/local/kafka* /usr/local/kafka && \
 ln -s /usr/local/kafka/config /etc/kafka
-RUN mkdir /usr/local/kafka/data /usr/local/kafka/log
 ADD conf/kafka/server.properties /etc/kafka
+RUN mkdir /usr/local/kafka/data /usr/local/kafka/log
 #ENV PATH=/usr/local/kafka/bin:$PATH
 
 # Hive
-ADD packages/hive.tar.gz /usr/local
-RUN mv /usr/local/apache-hive* /usr/local/hive
+RUN mv /usr/local/apache-hive* /usr/local/hive && \
+ln -s /usr/local/hive/conf /etc/hive
+ADD conf/hive /etc/hive
+RUN ln -s /usr/share/java/mysql-connector-java.jar  /usr/local/hive/lib/mysql-connector-java.jar
+RUN rm /usr/local/hive/lib/guava-19.0.jar
+RUN cp /usr/local/hadoop/share/hadoop/hdfs/lib/guava-27.0-jre.jar /usr/local/hive/lib
 ENV HIVE_HOME=/usr/local/hive
+ENV HIVE_CONF_DIR=/etc/hive
+
 
 # MySQL
-RUN chown -R mysql:mysql /var/lib/mysql /var/run/mysqld
+RUN chown -R mysql:mysql /var/lib/mysql
 
 # PATH
+ENV PATH=/usr/local/hive/bin:/usr/local/kafka/bin:/usr/local/hadoop/bin/:/usr/local/hadoop/sbin:$PATH
 RUN echo "PATH=/usr/local/hive/bin:/usr/local/kafka/bin:/usr/local/hadoop/bin/:/usr/local/hadoop/sbin:$PATH" >> /etc/environment
 # all
-ADD entrypoint.sh /run
+ADD scripts/* /run/
 
 #ENTRYPOINT ["bash", "-c", "/tmp/start_all.sh"]
