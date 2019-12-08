@@ -18,10 +18,14 @@ nohup kafka-server-start.sh /etc/kafka/server.properties > /usr/local/kafka/log/
 su hadoop -c "bash /run/hadoop_init.sh"
 
 # hive
-schematool -initSchema -dbType mysql
+su hadoop -c "bash /run/hive_start.sh"
 
 
 # hue
+/usr/share/hue/build/env/bin/hue syncdb --noinput
+/usr/share/hue/build/env/bin/hue migrate
+nohup /usr/share/hue/build/env/bin/supervisor > /dev/null 2>&1 &
+
 
 # temporary
 #while true; do sleep 1000; done

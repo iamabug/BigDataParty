@@ -1,0 +1,23 @@
+<configuration>
+
+    <property>
+        <name>tez.lib.uris</name>
+        <value>hdfs://bigdata:8020/user/tez/tez.tar.gz</value>
+    </property>
+
+    <property>
+        <name>tez.use.cluster.hadoop-libs</name>
+        <value>true</value>
+    </property>
+
+    <property>
+        <name>tez.runtime.compress</name>
+        <value>true</value>
+    </property>
+
+    <property>
+        <name>tez.runtime.compress.codec</name>
+        <value>org.apache.hadoop.io.compress.SnappyCodec</value>
+    </property>
+
+</configuration>

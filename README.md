@@ -7,3 +7,7 @@ Included components:
 * Zookeeper
 * Hadoop
 * Kafka
+* Spark
+* MySQL
+* Hive
+* HUE

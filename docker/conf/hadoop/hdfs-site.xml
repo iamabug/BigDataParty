@@ -13,4 +13,8 @@
         <name>dfs.data.dir</name>
         <value>/usr/local/hadoop/data/datanode</value>
     </property>
+    <property>
+        <name>dfs.webhdfs.enable</name>
+        <value>true</value>
+    </property>
 </configuration>

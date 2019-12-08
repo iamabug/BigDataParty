@@ -1,4 +1,4 @@
-FROM ubuntu:18.04
+FROM gethue/hue
 
 RUN sed -i 's/security.ubuntu.com/mirrors.ustc.edu.cn/g' /etc/apt/sources.list
 RUN sed -i 's/archive.ubuntu.com/mirrors.ustc.edu.cn/g' /etc/apt/sources.list
@@ -9,8 +9,9 @@ echo mysql-server-5.7 mysql-server/root_password password root | debconf-set-sel
 echo mysql-server-5.7 mysql-server/root_password_again password root | debconf-set-selections && \
 apt-get install -y mysql-server-5.7 -o pkg::Options::="--force-confdef" -o pkg::Options::="--force-confold" --fix-missing
 
-RUN apt-get install -y --no-install-recommends openjdk-8-jdk net-tools vim wget telnet iputils-ping \
-openssh-server openssh-client python3 python3-dev python3-pip libmysql-java
+RUN apt-get install -y --no-install-recommends build-essential gcc openjdk-8-jdk net-tools vim wget telnet iputils-ping \
+openssh-server openssh-client python python-dev python-pip libmysql-java && \
+rm -rf /var/lib/apt/lists/*
 ENV JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
 
 
@@ -27,7 +28,7 @@ RUN sed "s#/tmp/zookeeper#/var/lib/zookeeper#" /usr/local/zookeeper/conf/zoo_sam
 # hadoop
 RUN mv /usr/local/hadoop* /usr/local/hadoop
 RUN ln -s /usr/local/hadoop/etc/hadoop /etc/hadoop
-RUN mkdir -p /usr/local/hadoop/data/{namenode,datanode}
+RUN mkdir -p /usr/local/hadoop/data/{namenode,datanode} /etc/hadoop-httpfs/conf/
 
 RUN echo "\nStrictHostKeyChecking no\nUserKnownHostsFile" >> /etc/ssh/ssh_config && \
 addgroup hadoop && \
@@ -49,6 +50,7 @@ ENV HADOOP_COMMON_LIB_NATIVE_DIR=${HADOOP_HOME}/lib/native
 ENV HADOOP_OPTS="-Djava.library.path=${HADOOP_HOME}/lib"
 #ENV PATH=${HADOOP_HOME}/bin:${HADOOP_HOME}/sbin:$PATH
 ADD conf/hadoop /etc/hadoop
+ADD conf/httpfs/httpfs-site.xml /etc/hadoop-httpfs/conf/
 
 # Spark
 RUN mv /usr/local/spark* /usr/local/spark && \
@@ -63,6 +65,11 @@ ADD conf/kafka/server.properties /etc/kafka
 RUN mkdir /usr/local/kafka/data /usr/local/kafka/log
 #ENV PATH=/usr/local/kafka/bin:$PATH
 
+# Tez
+RUN mv /usr/local/apache-tez* /usr/local/tez && \
+ln -s /usr/local/tez/conf /etc/tez
+ENV TEZ_HOME=/usr/local/tez
+
 # Hive
 RUN mv /usr/local/apache-hive* /usr/local/hive && \
 ln -s /usr/local/hive/conf /etc/hive
@@ -72,6 +79,13 @@ RUN rm /usr/local/hive/lib/guava-19.0.jar
 RUN cp /usr/local/hadoop/share/hadoop/hdfs/lib/guava-27.0-jre.jar /usr/local/hive/lib
 ENV HIVE_HOME=/usr/local/hive
 ENV HIVE_CONF_DIR=/etc/hive
+
+# Hue
+ADD conf/hue /usr/share/hue/desktop/conf
+#RUN mv /usr/local/hue* /usr/local/hue && \
+#ln -s /usr/local/hue/desktop/conf /etc/hue
+#ADD conf/hue /etc/hue
+#ENV HUE_HOME=/usr/local/hue
 
 
 # MySQL

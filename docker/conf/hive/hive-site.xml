@@ -37,4 +37,9 @@
         <value>/user/hive/log</value>
     </property>
 
+    <property>
+        <name>hive.server2.enable.doAs</name>
+        <value>false</value>
+    </property>
+
 </configuration>
