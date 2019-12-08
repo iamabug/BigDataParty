@@ -5,6 +5,7 @@ kafka_v=2.3.1
 scala_v=2.12
 hive_v=3.1.2
 tez_v=0.9.2
+flink_v=1.9.1
 
 # font color
 RED="\033[0;31m"
@@ -19,6 +20,8 @@ zookeeper_url=${mirror_prefix}/apache/zookeeper/zookeeper-${zookeeper_v}/apache-
 kafka_url=${mirror_prefix}/apache/kafka/2.3.1/kafka_${scala_v}-${kafka_v}.tgz
 hive_url=${mirror_prefix}/apache/hive/hive-${hive_v}/apache-hive-${hive_v}-bin.tar.gz
 tez_url=${mirror_prefix}/apache/tez/${tez_v}/apache-tez-${tez_v}-bin.tar.gz
+flink_url=${mirror_prefix}/apache/flink/flink-${flink_v}/flink-${flink_v}-bin-scala_${scala_v}.tgz
+flink_required_jar="https://repo.maven.apache.org/maven2/org/apache/flink/flink-shaded-hadoop-2-uber/2.8.3-7.0/flink-shaded-hadoop-2-uber-2.8.3-7.0.jar"
 
 colorful_echo() {
     echo "${1}${2}${NC}"
@@ -39,3 +42,5 @@ download "${zookeeper_url}" zookeeper.tar.gz
 download "${kafka_url}" kafka.tgz
 download "${hive_url}" hive.tar.gz
 download "${tez_url}" tez.tar.gz
+download "${flink_url}" flink.tgz
+download "${flink_required_jar}" flink-hadoop-uber.jar

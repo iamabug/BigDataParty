@@ -16,17 +16,17 @@ ENV JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
 
 
 # add all packages
-ADD packages/* /usr/local/
+ADD packages/*gz /usr/local/
 RUN ls /usr/local
 
 # zookeeper
-RUN mv /usr/local/apache-zookeeper* /usr/local/zookeeper
+RUN mv /usr/local/apache-zookeeper-3.5.6-bin /usr/local/zookeeper
 RUN mkdir /var/lib/zookeeper
 RUN sed "s#/tmp/zookeeper#/var/lib/zookeeper#" /usr/local/zookeeper/conf/zoo_sample.cfg > /usr/local/zookeeper/conf/zoo.cfg
 
 
 # hadoop
-RUN mv /usr/local/hadoop* /usr/local/hadoop
+RUN mv /usr/local/hadoop-3.1.3 /usr/local/hadoop
 RUN ln -s /usr/local/hadoop/etc/hadoop /etc/hadoop
 RUN mkdir -p /usr/local/hadoop/data/{namenode,datanode} /etc/hadoop-httpfs/conf/
 
@@ -53,25 +53,25 @@ ADD conf/hadoop /etc/hadoop
 ADD conf/httpfs/httpfs-site.xml /etc/hadoop-httpfs/conf/
 
 # Spark
-RUN mv /usr/local/spark* /usr/local/spark && \
+RUN mv /usr/local/spark-2.4.4-bin-hadoop2.7 /usr/local/spark && \
 ln -s /usr/local/spark/conf /etc/spark
 ADD conf/spark /etc/spark
 #ENV PATH=/usr/local/spark/bin:$PATH
 
 # Kafka
-RUN mv /usr/local/kafka* /usr/local/kafka && \
+RUN mv /usr/local/kafka_2.12-2.3.1 /usr/local/kafka && \
 ln -s /usr/local/kafka/config /etc/kafka
 ADD conf/kafka/server.properties /etc/kafka
 RUN mkdir /usr/local/kafka/data /usr/local/kafka/log
 #ENV PATH=/usr/local/kafka/bin:$PATH
 
 # Tez
-RUN mv /usr/local/apache-tez* /usr/local/tez && \
+RUN mv /usr/local/apache-tez-0.9.2-bin /usr/local/tez && \
 ln -s /usr/local/tez/conf /etc/tez
 ENV TEZ_HOME=/usr/local/tez
 
 # Hive
-RUN mv /usr/local/apache-hive* /usr/local/hive && \
+RUN mv /usr/local/apache-hive-3.1.2-bin /usr/local/hive && \
 ln -s /usr/local/hive/conf /etc/hive
 ADD conf/hive /etc/hive
 RUN ln -s /usr/share/java/mysql-connector-java.jar  /usr/local/hive/lib/mysql-connector-java.jar
@@ -82,19 +82,19 @@ ENV HIVE_CONF_DIR=/etc/hive
 
 # Hue
 ADD conf/hue /usr/share/hue/desktop/conf
-#RUN mv /usr/local/hue* /usr/local/hue && \
-#ln -s /usr/local/hue/desktop/conf /etc/hue
-#ADD conf/hue /etc/hue
-#ENV HUE_HOME=/usr/local/hue
-
 
 # MySQL
 RUN chown -R mysql:mysql /var/lib/mysql
 
+# Flink
+RUN mv /usr/local/flink-1.9.1 /usr/local/flink
+ADD packages/flink-hadoop-uber.jar /usr/local/flink/lib/
+
 # PATH
-ENV PATH=/usr/local/hive/bin:/usr/local/kafka/bin:/usr/local/hadoop/bin/:/usr/local/hadoop/sbin:$PATH
-RUN echo "PATH=/usr/local/hive/bin:/usr/local/kafka/bin:/usr/local/hadoop/bin/:/usr/local/hadoop/sbin:$PATH" >> /etc/environment
-# all
+ENV PATH=/usr/local/spark/bin:/usr/local/hive/bin:/usr/local/kafka/bin:/usr/local/hadoop/bin/:/usr/local/hadoop/sbin:$PATH
+RUN echo "PATH=/usr/local/spark/bin:/usr/local/hive/bin:/usr/local/kafka/bin:/usr/local/hadoop/bin/:/usr/local/hadoop/sbin:$PATH" >> /etc/environment
+
+# involved scripts
 ADD scripts/* /run/
 
 #ENTRYPOINT ["bash", "-c", "/tmp/start_all.sh"]

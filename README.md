@@ -9,5 +9,6 @@ Included components:
 * Kafka
 * Spark
 * MySQL
-* Hive
-* HUE
+* Hive (on Tez)
+* Hue
+* Flink
