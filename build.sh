@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 hadoop_v=3.1.3
 spark_v=2.4.4
 zookeeper_v=3.5.6
@@ -44,3 +46,5 @@ download "${hive_url}" hive.tar.gz
 download "${tez_url}" tez.tar.gz
 download "${flink_url}" flink.tgz
 download "${flink_required_jar}" flink-hadoop-uber.jar
+
+docker build -t bdp .

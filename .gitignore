@@ -2,3 +2,5 @@
 *.tgz
 
 .idea/
+*jar
+packages/
