@@ -9,10 +9,14 @@ echo mysql-server-5.7 mysql-server/root_password password root | debconf-set-sel
 echo mysql-server-5.7 mysql-server/root_password_again password root | debconf-set-selections && \
 apt-get install -y mysql-server-5.7 -o pkg::Options::="--force-confdef" -o pkg::Options::="--force-confold" --fix-missing
 
+ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get install -y --no-install-recommends build-essential gcc openjdk-8-jdk net-tools vim wget telnet iputils-ping \
-openssh-server openssh-client python python-dev python-pip libmysql-java && \
+openssh-server openssh-client python python-dev python-pip libmysql-java tzdata && \
 rm -rf /var/lib/apt/lists/*
 ENV JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
+RUN echo "Asia/Shanghai" > /etc/timezone && \
+rm -f /etc/localtime  && \
+dpkg-reconfigure -f noninteractive tzdata
 
 
 # add all packages
@@ -97,4 +101,6 @@ RUN echo "PATH=/usr/local/spark/bin:/usr/local/hive/bin:/usr/local/kafka/bin:/us
 # involved scripts
 ADD scripts/* /run/
 
-#ENTRYPOINT ["bash", "-c", "/tmp/start_all.sh"]
+WORKDIR /
+
+# ENTRYPOINT ["bash", "-c", "/run/entrypoint.sh"]
