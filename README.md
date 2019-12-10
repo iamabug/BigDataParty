@@ -27,7 +27,7 @@
 docker run -it -p 8088:8088 -p 8888:8888 -h bigdata iamabug1128/bdp bash
 ```
 
-或者 clone 本项目并执行 `run-bop.sh` 脚本。
+或者 clone 本项目并执行 `run-bdp.sh` 脚本。
 
 > 8088 是 YARN 的 Web UI 端口，8888 是 Hue 的端口。
 >
