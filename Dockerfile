@@ -103,4 +103,4 @@ ADD scripts/* /run/
 
 WORKDIR /
 
-# ENTRYPOINT ["bash", "-c", "/run/entrypoint.sh"]
+CMD ["bash", "-c", "/run/entrypoint.sh && /run/wait_to_die.sh"]
