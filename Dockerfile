@@ -21,7 +21,6 @@ dpkg-reconfigure -f noninteractive tzdata
 
 # add all packages
 ADD packages/*gz /usr/local/
-RUN ls /usr/local
 
 # zookeeper
 RUN mv /usr/local/apache-zookeeper-3.5.6-bin /usr/local/zookeeper
@@ -95,8 +94,8 @@ RUN mv /usr/local/flink-1.9.1 /usr/local/flink
 ADD packages/flink-hadoop-uber.jar /usr/local/flink/lib/
 
 # PATH
-ENV PATH=/usr/local/spark/bin:/usr/local/hive/bin:/usr/local/kafka/bin:/usr/local/hadoop/bin/:/usr/local/hadoop/sbin:$PATH
-RUN echo "PATH=/usr/local/spark/bin:/usr/local/hive/bin:/usr/local/kafka/bin:/usr/local/hadoop/bin/:/usr/local/hadoop/sbin:$PATH" >> /etc/environment
+ENV PATH=/usr/local/flink/bin:/usr/local/spark/bin:/usr/local/hive/bin:/usr/local/kafka/bin:/usr/local/hadoop/bin/:/usr/local/hadoop/sbin:$PATH
+RUN echo "PATH=/usr/local/flink/bin:/usr/local/spark/bin:/usr/local/hive/bin:/usr/local/kafka/bin:/usr/local/hadoop/bin/:/usr/local/hadoop/sbin:$PATH" >> /etc/environment
 
 # involved scripts
 ADD scripts/* /run/
