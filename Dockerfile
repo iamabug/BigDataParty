@@ -59,14 +59,13 @@ ADD conf/httpfs/httpfs-site.xml /etc/hadoop-httpfs/conf/
 RUN mv /usr/local/spark-2.4.4-bin-hadoop2.7 /usr/local/spark && \
 ln -s /usr/local/spark/conf /etc/spark
 ADD conf/spark /etc/spark
-#ENV PATH=/usr/local/spark/bin:$PATH
+RUN cp /usr/local/spark/conf/log4j.properties.template /usr/local/spark/conf/log4j.properties
 
 # Kafka
 RUN mv /usr/local/kafka_2.12-2.3.1 /usr/local/kafka && \
 ln -s /usr/local/kafka/config /etc/kafka
 ADD conf/kafka/server.properties /etc/kafka
 RUN mkdir /usr/local/kafka/data /usr/local/kafka/log
-#ENV PATH=/usr/local/kafka/bin:$PATH
 
 # Tez
 RUN mv /usr/local/apache-tez-0.9.2-bin /usr/local/tez && \
