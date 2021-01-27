@@ -29,7 +29,7 @@ RUN sed "s#/tmp/zookeeper#/var/lib/zookeeper#" /usr/local/zookeeper/conf/zoo_sam
 
 
 # hadoop
-RUN mv /usr/local/hadoop-3.1.3 /usr/local/hadoop
+RUN mv /usr/local/hadoop-3.1.4 /usr/local/hadoop
 RUN ln -s /usr/local/hadoop/etc/hadoop /etc/hadoop
 RUN mkdir -p /usr/local/hadoop/data/{namenode,datanode} /etc/hadoop-httpfs/conf/
 
@@ -62,7 +62,7 @@ ADD conf/spark /etc/spark
 RUN cp /usr/local/spark/conf/log4j.properties.template /usr/local/spark/conf/log4j.properties
 
 # Kafka
-RUN mv /usr/local/kafka_2.12-2.3.1 /usr/local/kafka && \
+RUN mv /usr/local/kafka_2.11-2.3.1 /usr/local/kafka && \
 ln -s /usr/local/kafka/config /etc/kafka
 ADD conf/kafka/server.properties /etc/kafka
 RUN mkdir /usr/local/kafka/data /usr/local/kafka/log

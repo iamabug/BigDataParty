@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-hadoop_v=3.1.3
+hadoop_v=3.1.4
 spark_v=2.4.4
 zookeeper_v=3.5.6
 kafka_v=2.3.1
