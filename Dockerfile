@@ -60,6 +60,9 @@ RUN mv /usr/local/spark-2.4.4-bin-hadoop2.7 /usr/local/spark && \
 ln -s /usr/local/spark/conf /etc/spark
 ADD conf/spark /etc/spark
 RUN cp /usr/local/spark/conf/log4j.properties.template /usr/local/spark/conf/log4j.properties
+RUN ln -s /usr/share/java/mysql-connector-java.jar /usr/local/spark/jars/mysql-connector-java.jar
+RUN ln -s /usr/local/hive/conf/hive-site.xml /usr/local/spark/conf/hive-site.xml
+RUN sed -i 's/log4j.rootCategory=INFO, console/log4j.rootCategory=WARN,console/' /usr/local/spark/conf/log4j.properties
 
 # Kafka
 RUN mv /usr/local/kafka_2.11-2.3.1 /usr/local/kafka && \
