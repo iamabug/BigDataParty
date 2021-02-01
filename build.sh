@@ -47,4 +47,4 @@ download "${tez_url}" tez.tar.gz
 download "${flink_url}" flink.tgz
 download "${flink_required_jar}" flink-hadoop-uber.jar
 
-docker build -t bdp .
+docker build -t iamabug1128/bdp .

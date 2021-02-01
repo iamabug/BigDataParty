@@ -28,6 +28,11 @@
     </property>
 
     <property>
+        <name>hive.metastore.uris</name>
+        <value>thrift://bigdata:9083</value>
+    </property>
+
+    <property>
         <name>hive.exec.scratchdir</name>
         <value>/user/hive/tmp</value>
     </property>
