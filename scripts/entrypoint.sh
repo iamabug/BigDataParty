@@ -4,7 +4,8 @@
 service ssh start
 
 # mysql
-chown -R mysql:mysql /var/lib/mysql
+#chown -R mysql:mysql /var/lib/mysql
+usermod -d /var/lib/mysql/ mysql
 service mysql start
 /run/mysql_init.sh
 
@@ -22,9 +23,9 @@ su hadoop -c "bash /run/hive_start.sh"
 
 
 # hue
-/usr/share/hue/build/env/bin/hue syncdb --noinput
-/usr/share/hue/build/env/bin/hue migrate
-nohup /usr/share/hue/build/env/bin/supervisor > /dev/null 2>&1 &
+#/usr/share/hue/build/env/bin/hue syncdb --noinput
+#/usr/share/hue/build/env/bin/hue migrate
+#nohup /usr/share/hue/build/env/bin/supervisor > /dev/null 2>&1 &
 
 
 # temporary
